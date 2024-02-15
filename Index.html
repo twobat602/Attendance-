@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attendance Checker</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
+  }
+
+  #container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  h1 {
+    text-align: center;
+    color: #333;
+  }
+
+  form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  input[type="text"] {
+    padding: 8px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  input[type="checkbox"] {
+    margin-right: 5px;
+  }
+
+  button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  button:hover {
+    background-color: #45a049;
+  }
+</style>
+</head>
+<body>
+  <h1>Attendance Checker</h1>
+  <form id="attendanceForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" required>
+    <input type="checkbox" id="presentCheckbox">
+    <label for="presentCheckbox">Present</label>
+    <button type="button" onclick="submitAttendance()">Submit Attendance</button>
+  </form>
+
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script>
+    let presentAttendees = [];
+
+    function submitAttendance() {
+        const nameInput = document.getElementById('name').value;
+        const presentCheckbox = document.getElementById('presentCheckbox').checked;
+
+        if (presentCheckbox) {
+            presentAttendees.push(nameInput);
+            alert(nameInput + ' is marked as present!');
+        }
+
+        document.getElementById('name').value = '';
+        document.getElementById('presentCheckbox').checked = false;
+
+        sendEmail();
+    }
+
+    function sendEmail() {
+        const presentAttendeesList = presentAttendees.join(', ');
+
+        emailjs.init("lhWeC2g8pQFwo_wj7");
+        emailjs.send("service_2w5imku", "template_5thjk3q", {
+            to_name: "Your Name",
+            from_name: "Attendance System",
+            message: `Present attendees: ${presentAttendeesList}`
+        }).then(function(response) {
+            console.log('Email sent successfully:', response);
+            alert('Email sent successfully!');
+        }, function(error) {
+            console.error('Email sending failed:', error);
+            alert('Failed to send email.');
+        });
+    }
+  </script>
+</body>
+</html>
